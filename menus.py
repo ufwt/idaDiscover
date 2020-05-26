@@ -499,7 +499,7 @@ def RegisterMenus(idaDiscover):
     #IDAAPI_attach_action_to_menu('Edit/Plugins/IDADiscover/Config/', "IDADiscoverReloadYaraRules", IDAAPI_SETMENU_APP)
     #IDAAPI_attach_action_to_menu('Edit/Plugins/IDADiscover/Config/', "IDADiscoverReloadModules", IDAAPI_SETMENU_APP)
     IDAAPI_attach_action_to_menu('Edit/Plugins/IDADiscover/Signatures/', "IDADiscoverAnalysisYara", IDAAPI_SETMENU_APP)
-    IDAAPI_attach_action_to_menu('Edit/Plugins/IDADiscover/Signatures/', "IDADiscoverAnalysisSignSrch", IDAAPI_SETMENU_APP)
+    #IDAAPI_attach_action_to_menu('Edit/Plugins/IDADiscover/Signatures/', "IDADiscoverAnalysisSignSrch", IDAAPI_SETMENU_APP)
     IDAAPI_attach_action_to_menu('Edit/Plugins/IDADiscover/Signatures/', "IDADiscoverAnalysisApiCrc32Usage", IDAAPI_SETMENU_APP)
     IDAAPI_attach_action_to_menu('Edit/Plugins/IDADiscover/Crypto/', "IDADiscoverAnalysisEncryptedText", IDAAPI_SETMENU_APP)
     IDAAPI_attach_action_to_menu('Edit/Plugins/IDADiscover/Crypto/', "IDADiscoverAnalysisStackStrings", IDAAPI_SETMENU_APP)

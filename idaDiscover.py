@@ -30,7 +30,7 @@ from utils import Utils
 from ida_defines import *
 import binascii
 from analyzerstatistics import AnalyzerStatistic
-from analyzersignsrch import AnalyzerSignSrch
+#from analyzersignsrch import AnalyzerSignSrch
 from analyzeryara import AnalyzerYara
 from analyzerloops import AnalyzerLoops
 from analyzercrypto import AnalyzerCrypto
@@ -131,7 +131,7 @@ class IdaDiscover():
     def ReloadModules(self):
         global gPrinter
         self.ReloadYaraRules()
-        self.signSrchAnalyzer = AnalyzerSignSrch(self.signSearchPath, gPrinter)
+        #self.signSrchAnalyzer = AnalyzerSignSrch(self.signSearchPath, gPrinter)
         self.loopsAnalyzer = AnalyzerLoops(gPrinter)
         self.cryptoAnalyzer = AnalyzerCrypto(gPrinter, self.GetApiNamesCrcs())
         self.algorithmsAnalyzer = AnalyzerAlgorithms(gPrinter)
@@ -263,7 +263,7 @@ class IdaDiscover():
         global gPrinter
         gPrinter.Clear()
         if self.yaraRulesPath!="disabled": self.YaraAnalysis(clear=False)
-        if self.signSearchPath!="disabled": self.SignSrchAnalysis(clear=False)
+        #if self.signSearchPath!="disabled": self.SignSrchAnalysis(clear=False)
         if self.bAnalyzeLoops: self.LoopsAnalysis(clear=False)
         if self.bAnalyzeHeuristicIdentificationAlgorithms: self.HeuristicIdentificationAlgorithmsAnalysis(clear=False)
         if self.bSearchEncryptedTexts: self.EncryptedTextAnalysis(clear=False)
@@ -280,10 +280,10 @@ class IdaDiscover():
     
     ################################################################################################
     
-    def SignSrchAnalysis(self, clear=True):
-        global gPrinter
-        if clear: gPrinter.Clear("signsrch")
-        self.signSrchAnalyzer.SignSrchToIdb()
+    #def SignSrchAnalysis(self, clear=True):
+    #    global gPrinter
+    #    if clear: gPrinter.Clear("signsrch")
+    #    self.signSrchAnalyzer.SignSrchToIdb()
     
     ################################################################################################
     

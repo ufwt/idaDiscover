@@ -71,7 +71,7 @@ class Printer():
         self.Printers["emulator"] = InternalPrinter("Emulator - IDA Discover results")
         self.Printers["loops"] = InternalPrinter("Loops - IDA Discover results")
         self.Printers["references"] = InternalPrinter("References - IDA Discover results")
-        self.Printers["signsrch"] = InternalPrinter("Signsrch - IDA Discover results")
+        #self.Printers["signsrch"] = InternalPrinter("Signsrch - IDA Discover results")
         self.Printers["functions"] = InternalPrinter("Functions - IDA Discover results")
         self.Printers["yara"] = InternalPrinter("Yara - IDA Discover results")
         self.Printers["general"] = InternalPrinter("General - IDA Discover results")
