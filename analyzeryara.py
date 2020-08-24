@@ -1,3 +1,7 @@
+#
+# idaDiscover plugin - by Javier Vicente Vallejo - @vallejocc
+#
+
 from ida_defines import *
 from installation import Installation
 import os
@@ -33,6 +37,17 @@ class AnalyzerYara():
 
     ################################################################################################
     
+    def AnalyzeInline(self, data, callback):
+        try:
+            yaraname = IDAAPI_AskStr("", "Please enter a name for the inline yara rule")
+            yarapattern = IDAAPI_AskStr("", "Please enter a pattern for the inline yara rule")
+            inlinerule = self.yaramod.compile(source='rule %s {\r\nstrings:\r\n$s =  %s\r\ncondition:\r\nall of them\r\n}' % (yaraname, yarapattern))
+            inlinerule.match(data=data, callback=callback)
+        except Exception as e:
+            print("Error in yara match %s" % e)
+            
+    ################################################################################################
+    
     def YaraCallback(self, data):
         try:
             if data['matches'] == True:
@@ -51,7 +66,7 @@ class AnalyzerYara():
         
     ################################################################################################
     
-    def YaraMatchesToIdbBySegments(self):
+    def YaraMatchesToIdbBySegments(self, binlineyara = False):
         self.gPrinter.doPrint("Yara matches:", "yara")
         self.gPrinter.doPrint("----------------------------------------------------------", "yara")
         for seg_ea in IDAAPI_Segments():
@@ -67,14 +82,15 @@ class AnalyzerYara():
             else:
                 print("Yara analysis on segment %x - %x" % (self.currentEa, self.currentEaEnd))
             if segmentContent:
-                self.Analyze(segmentContent, self.YaraCallback)
+                if not binlineyara: self.Analyze(segmentContent, self.YaraCallback)
+                else: self.AnalyzeInline(segmentContent, self.YaraCallback)
         self.gPrinter.doPrint("----------------------------------------------------------", "yara")
         self.gPrinter.doPrint("", "yara")
         self.gPrinter.doPrint("", "yara")
 
     ################################################################################################
     
-    def YaraMatchesToIdb(self):
+    def YaraMatchesToIdb(self, binlineyara = False):
         self.gPrinter.doPrint("Yara matches:", "yara")
         self.gPrinter.doPrint("----------------------------------------------------------", "yara")
         bfirst = True
@@ -98,7 +114,8 @@ class AnalyzerYara():
                 print("Yara analysis on segment %x - %x" % (seg_ea, self.currentEaEnd))
                 fullImage += (segmentContent + "\x00"*removedBytes)
             self.currentEaEnd += removedBytes
-        self.Analyze(fullImage, self.YaraCallback)
+        if not binlineyara: self.Analyze(fullImage, self.YaraCallback)
+        else: self.AnalyzeInline(fullImage, self.YaraCallback)
         self.gPrinter.doPrint("----------------------------------------------------------", "yara")
         self.gPrinter.doPrint("", "yara")
         self.gPrinter.doPrint("", "yara")

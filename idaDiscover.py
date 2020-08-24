@@ -1,16 +1,6 @@
-#TODO: HACER RESUMEN DE FUNCIONES: strings usadas, constantes?, suspicious loops, comments, variables / otras funciones llamadas con nombre, ...
-#TODO: ENTROPIA? por paginas? estadistica de funciones segun entropia de los datos que usan?
-#TODO: LA FUNCION HEURISTICA DE BUSQUEDA DE RC4 CONFUNDE CRC32 CON RC4, FILTRAR USANDO ESTE VALOR EN EL BUCLE EDB88320 (TIPICO DE CRC32). TAMBIEN SALEN SHA256, MEJORAR ESTA HEURISTICA
-#TODO: UPDATE CALLTARGETS AND APICALLS ON IDADISCOVER.INI WITH APIS FROM MORE DLLS
-#TODO: cyclomatic_complexity: https://github.com/danigargu/ida-scripts/blob/master/cyclomatic_complexity.py
-#TODO: structurize?
-#TODO: IDADiscoverAnalysisRc4 -> IDADiscoverHeuristicAnalysisAlgorithms (100h/102h rc4, 30h...37h...3fh values, 15180h (seconds / day, dgas), typical rngs, ...
-#TODO: Set symbols by variable contents
-#TODO: Yarizar codigo: dar la opcion de seleccion trozo (colorear lo seleccionado). Luego, poder ir quitando trozos seleccionados (descoloreando). Esos trozos deseleccionados, quedaran como ??. 
-#      Dar tambien la opcion de descolorear de golpe direcciones y cosas q cambiaran segun donde este ubicado el codigo etc...
-#TODO: Buscar cosas conocidas: claves RSA, etc... -> quizas para esto lo mejor sea simplemente tirar de yaras
-#TODO: script para colorear bucles y nombrar de desencriptado
-#TODO: script para colorear y nombrar algoritmos conocidos: rsa, tea, des, rc4, zlib ...
+#
+# idaDiscover plugin - by Javier Vicente Vallejo - @vallejocc
+#
 
 import struct
 
@@ -273,10 +263,10 @@ class IdaDiscover():
     
     ################################################################################################
     
-    def YaraAnalysis(self, clear=True):
+    def YaraAnalysis(self, clear=True, binlineyara=False):
         global gPrinter
         if clear: gPrinter.Clear("yara")
-        self.yaraAnalyzer.YaraMatchesToIdb()
+        self.yaraAnalyzer.YaraMatchesToIdb(binlineyara=binlineyara)
     
     ################################################################################################
     
@@ -759,6 +749,33 @@ class IdaDiscover():
         self.selectedContent1 = wild
         self.selectedContent1Range = (0, 0)
         print("[+] wildcard - content 1: %s" % self.selectedContent1)
+
+    ################################################################################################
+    
+    def ReverseKey1(self):
+        if self.selectedKey1:
+            self.selectedKey1 = self.selectedKey1[::-1]
+            print("[+] crypto - reversed key 1")
+        else:
+            print("[-] crypto - reversed key 1 is null")
+
+    ################################################################################################
+
+    def ReverseKey2(self):
+        if self.selectedKey2:
+            self.selectedKey2 = self.selectedKey2[::-1]
+            print("[+] crypto - reversed key 2")
+        else:
+            print("[-] crypto - reversed key 2 is null")
+
+    ################################################################################################
+
+    def ReverseContent1(self):
+        if self.selectedContent1:
+            self.selectedContent1 = self.selectedContent1[::-1]
+            print("[+] crypto - reversed content 1")
+        else:
+            print("[-] crypto - reversed content 1 is null")
 
     ################################################################################################
 

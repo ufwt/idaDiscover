@@ -1,3 +1,7 @@
+#
+# idaDiscover plugin - by Javier Vicente Vallejo - @vallejocc
+#
+
 import sys
 from ida_defines import *
 from importlib import import_module

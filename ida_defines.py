@@ -1,3 +1,7 @@
+#
+# idaDiscover plugin - by Javier Vicente Vallejo - @vallejocc
+#
+
 # IDA Python SDK
 from idaapi import *
 from idc import *

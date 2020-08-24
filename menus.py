@@ -1,3 +1,7 @@
+#
+# idaDiscover plugin - by Javier Vicente Vallejo - @vallejocc
+#
+
 from utils import Utils
 from ida_defines import *
 
@@ -315,6 +319,10 @@ class IDADiscoverMenu(IDAAPI_action_handler_t):
         if id==74: self.curMenu="edit_emu_parameters_store"
         if id==75: self.curMenu="show_current_selections"
         if id==76: self.curMenu="edit_current_selections"
+        if id==77: self.curMenu="ida_discover_reverse_key1"
+        if id==78: self.curMenu="ida_discover_reverse_key2"
+        if id==79: self.curMenu="ida_discover_reverse_content1"
+        if id==80: self.curMenu="analysis_yara_inline"
         IDAAPI_action_handler_t.__init__(self)
 
     def activate(self, ctx):
@@ -322,7 +330,7 @@ class IDADiscoverMenu(IDAAPI_action_handler_t):
         if self.curMenu=="install": self.idaDiscover.Install()
         if self.curMenu=="analysis_full": self.idaDiscover.FullAnalysis()
         if self.curMenu=="analysis_yara": self.idaDiscover.YaraAnalysis()
-        #if self.curMenu=="analysis_signsrch": self.idaDiscover.SignSrchAnalysis()
+        if self.curMenu=="analysis_yara_inline": self.idaDiscover.YaraAnalysis(binlineyara=True)
         if self.curMenu=="analysis_loops": self.idaDiscover.LoopsAnalysis()
         if self.curMenu=="analysis_encrypted_text": self.idaDiscover.EncryptedTextAnalysis()
         if self.curMenu=="analysis_heuristic_identification_algorithms": self.idaDiscover.HeuristicIdentificationAlgorithmsAnalysis()
@@ -394,6 +402,9 @@ class IDADiscoverMenu(IDAAPI_action_handler_t):
         if self.curMenu=="edit_emu_parameters_store": self.idaDiscover.EditEmuParametersStore()
         if self.curMenu=="show_current_selections": self.idaDiscover.ShowCurrentSelections()
         if self.curMenu=="edit_current_selections": self.idaDiscover.EditCurrentSelections()
+        if self.curMenu=="ida_discover_reverse_key1": self.idaDiscover.ReverseKey1()
+        if self.curMenu=="ida_discover_reverse_key2": self.idaDiscover.ReverseKey2()
+        if self.curMenu=="ida_discover_reverse_content1": self.idaDiscover.ReverseContent1()
         return
 
     def update(self, ctx):
@@ -481,6 +492,10 @@ def RegisterMenus(idaDiscover):
     DoRegisterAction("IDADiscoverAnalysisEditEmuParametersStore", "Emulator - Edit emulation config", 74, idaDiscover)
     DoRegisterAction("IDADiscoverAnalysisShowCurrentSelections", "Select - Show Current Selections", 75, idaDiscover)
     DoRegisterAction("IDADiscoverAnalysisEditCurrentSelections", "Select - Edit Current Selections", 76, idaDiscover)
+    DoRegisterAction("IDADiscoverReverseKey1", "Crypto - Reverse Key1", 77, idaDiscover)
+    DoRegisterAction("IDADiscoverReverseKey2", "Crypto - Reverse Key2", 78, idaDiscover)
+    DoRegisterAction("IDADiscoverReverseContent1", "Crypto - Reverse Content1", 79, idaDiscover)
+    DoRegisterAction("IDADiscoverAnalysisYaraInline", "Analysis - Yara Inline", 80, idaDiscover)
 
     IDAAPI_attach_action_to_menu('Edit/Plugins/', "IDADiscover", IDAAPI_SETMENU_APP)
     IDAAPI_attach_action_to_menu('Edit/Plugins/IDADiscover/', "Loops", IDAAPI_SETMENU_APP)
@@ -499,7 +514,8 @@ def RegisterMenus(idaDiscover):
     #IDAAPI_attach_action_to_menu('Edit/Plugins/IDADiscover/Config/', "IDADiscoverReloadYaraRules", IDAAPI_SETMENU_APP)
     #IDAAPI_attach_action_to_menu('Edit/Plugins/IDADiscover/Config/', "IDADiscoverReloadModules", IDAAPI_SETMENU_APP)
     IDAAPI_attach_action_to_menu('Edit/Plugins/IDADiscover/Signatures/', "IDADiscoverAnalysisYara", IDAAPI_SETMENU_APP)
-    #IDAAPI_attach_action_to_menu('Edit/Plugins/IDADiscover/Signatures/', "IDADiscoverAnalysisSignSrch", IDAAPI_SETMENU_APP)
+    IDAAPI_attach_action_to_menu('Edit/Plugins/IDADiscover/Signatures/', "IDADiscoverAnalysisYaraInline", IDAAPI_SETMENU_APP)
+    IDAAPI_attach_action_to_menu('Edit/Plugins/IDADiscover/Signatures/', "IDADiscoverAnalysisSignSrch", IDAAPI_SETMENU_APP)
     IDAAPI_attach_action_to_menu('Edit/Plugins/IDADiscover/Signatures/', "IDADiscoverAnalysisApiCrc32Usage", IDAAPI_SETMENU_APP)
     IDAAPI_attach_action_to_menu('Edit/Plugins/IDADiscover/Crypto/', "IDADiscoverAnalysisEncryptedText", IDAAPI_SETMENU_APP)
     IDAAPI_attach_action_to_menu('Edit/Plugins/IDADiscover/Crypto/', "IDADiscoverAnalysisStackStrings", IDAAPI_SETMENU_APP)
@@ -514,6 +530,9 @@ def RegisterMenus(idaDiscover):
     IDAAPI_attach_action_to_menu('Edit/Plugins/IDADiscover/Crypto/', "IDADiscoverSearchEncryptedStringAESCBC", IDAAPI_SETMENU_APP)
     IDAAPI_attach_action_to_menu('Edit/Plugins/IDADiscover/Crypto/', "IDADiscoverSearchEncryptedStringAESECB", IDAAPI_SETMENU_APP)
     IDAAPI_attach_action_to_menu('Edit/Plugins/IDADiscover/Crypto/', "IDADiscoverSearchEncryptedStringXOR", IDAAPI_SETMENU_APP)
+    IDAAPI_attach_action_to_menu('Edit/Plugins/IDADiscover/Crypto/', "IDADiscoverReverseKey1", IDAAPI_SETMENU_APP)
+    IDAAPI_attach_action_to_menu('Edit/Plugins/IDADiscover/Crypto/', "IDADiscoverReverseKey2", IDAAPI_SETMENU_APP)
+    IDAAPI_attach_action_to_menu('Edit/Plugins/IDADiscover/Crypto/', "IDADiscoverReverseContent1", IDAAPI_SETMENU_APP)
     IDAAPI_attach_action_to_menu('Edit/Plugins/IDADiscover/Loops/', "IDADiscoverAnalysisLoops", IDAAPI_SETMENU_APP)
     IDAAPI_attach_action_to_menu('Edit/Plugins/IDADiscover/Functions/', "IDADiscoverAnalysisHeuristicIdentificationAlgorithms", IDAAPI_SETMENU_APP)
     IDAAPI_attach_action_to_menu('Edit/Plugins/IDADiscover/Functions/', "IDADiscoverAnalysisMostUsedFunctions", IDAAPI_SETMENU_APP)
