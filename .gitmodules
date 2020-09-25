@@ -1,3 +1,9 @@
 [submodule "rules-master"]
 	path = rules-master
 	url = https://github.com/Yara-Rules/rules.git
+[submodule "RevealPE"]
+	path = RevealPE
+	url = https://github.com/vallejocc/RevealPE.git
+[submodule "pefile"]
+	path = pefile
+	url = https://github.com/erocarrera/pefile.git
